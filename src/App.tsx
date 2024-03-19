@@ -1,14 +1,9 @@
 import "./App.css";
+import "./index.css";
 import AppBar from "./components/AppBar";
-import Footer from "./components/Footer";
 
 function App() {
-  return (
-    <>
-      <AppBar />
-      <Footer />
-    </>
-  );
+  return <AppBar />;
 }
 
 export default App;
