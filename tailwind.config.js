@@ -9,5 +9,8 @@ module.exports = {
       xs: "576px",
       xxl: "1920px",
     },
+    fontFamily: {
+      jamjuree: ["Bai Jamjuree", "sans-serif"],
+    },
   },
 };
