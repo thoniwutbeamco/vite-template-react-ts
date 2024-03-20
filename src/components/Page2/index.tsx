@@ -1,47 +1,27 @@
-import React, { useEffect, useState } from "react";
-import "./FireworkAnimation.css";
-
-const FireworkAnimation: React.FC = () => {
-  const [fireworks, setFireworks] = useState<
-    { id: number; position: number }[]
-  >([]);
-
-  useEffect(() => {
-    const launchFirework = () => {
-      const newFireworks: { id: number; position: number }[] = [];
-      for (let i = 0; i < 10; i++) {
-        const randomPosition = Math.floor(Math.random() * 100);
-        newFireworks.push({ id: Date.now() + i, position: randomPosition });
-      }
-      setFireworks((prevFireworks) => [...prevFireworks, ...newFireworks]);
-
-      setTimeout(() => {
-        setFireworks((prevFireworks) =>
-          prevFireworks.filter((firework) =>
-            newFireworks.every((newFirework) => newFirework.id !== firework.id)
-          )
-        );
-      }, 2000);
-    };
-
-    const interval = setInterval(() => {
-      launchFirework();
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+import AnimatedCharacters from "../AnimatedCharacters";
+import { Fireworks } from "@fireworks-js/react";
+import type { FireworksHandlers } from "@fireworks-js/react";
+import { useRef } from "react";
+function Page2() {
+  const ref = useRef<FireworksHandlers>(null);
 
   return (
-    <div className="firework-container">
-      {fireworks.map((firework) => (
-        <div
-          key={firework.id}
-          className="firework"
-          style={{ left: `${firework.position}%` }}
-        ></div>
-      ))}
+    <div className="w-full h-full flex flex-col items-center">
+      <AnimatedCharacters />;
+      <Fireworks
+        ref={ref}
+        options={{ opacity: 1 }}
+        style={{
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          position: "fixed",
+          background: "#000",
+        }}
+      />
     </div>
   );
-};
+}
 
-export default FireworkAnimation;
+export default Page2;

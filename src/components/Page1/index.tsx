@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Dog1Pic from "./../../assets/dog1.jpg";
 import Dog2Pic from "./../../assets/dog2.jpg";
 import Dog3Pic from "./../../assets/dog3.jpg";
-import Firework from "../Page2";
+import { ReactFloatingBalloons } from "react-floating-balloons";
+import Page2 from "../Page2";
 
 function Page1() {
   const arr1 = useMemo(
@@ -48,6 +49,9 @@ function Page1() {
       {
         text: "Lum2-4",
       },
+      {
+        image: Dog3Pic,
+      },
     ],
     []
   );
@@ -64,24 +68,42 @@ function Page1() {
   useEffect(() => {
     if (animState) {
       const interval = setInterval(
-        () => setSelectedIndex((prev) => prev + 1),
+        () => {
+          if (selectedIndex !== data?.length - 1 || step < dataState.length - 1)
+            setSelectedIndex((prev) => prev + 1);
+        },
         selectedIndex === 0 ? 0 : 2000
       );
 
-      if (selectedIndex === data?.length) {
-        setAnimState(false);
+      if (selectedIndex === data?.length - 1) {
         setHideButton(false);
-        setSelectedIndex(0);
-        setData(undefined);
-        setStep((prev) => prev + 1);
+        setAnimState(false);
+        if (step < dataState.length - 1) {
+          setSelectedIndex(0);
+          setData(undefined);
+          setStep((prev) => prev + 1);
+        }
       }
 
       return () => clearInterval(interval);
     }
-  }, [animState, selectedIndex, data, step]);
+  }, [animState, selectedIndex, data, step, dataState.length]);
+
+  const Balloons = useMemo(() => {
+    return (
+      <div className="absolute">
+        <ReactFloatingBalloons
+          count={3}
+          msgText=""
+          colors={["red", "green"]}
+          popVolumeLevel={0.5}
+        />
+      </div>
+    );
+  }, []);
 
   if (showPage2) {
-    return <Firework />;
+    return <Page2 />;
   }
 
   return (
@@ -96,8 +118,7 @@ function Page1() {
                   key={index}
                   initial={{ opacity: 0, scale: 1 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1 }}
-                  transition={{ duration: 2.5, ease: "easeInOut" }}
+                  transition={{ duration: 2.5 }}
                 >
                   {item.image && (
                     <img
@@ -121,7 +142,7 @@ function Page1() {
         <button
           className="w-[300px] fixed bottom-[20px] border-solid border-2 border-black px-[12px] py-[16px] bg-[#FCE33C] rounded-full text-[28px] font-jamjuree font-semibold"
           onClick={() => {
-            if (selectedIndex === 0 && step <= dataState.length - 1) {
+            if (selectedIndex === 0) {
               setData(dataState[step]);
             } else {
               setShowPage2(true);
@@ -133,6 +154,7 @@ function Page1() {
           Click!
         </button>
       )}
+      {Balloons}
     </div>
   );
 }
