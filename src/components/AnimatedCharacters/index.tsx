@@ -57,7 +57,8 @@ export const AnimatedText = ({
   const isInView = useInView(ref, { amount: 0.5, once });
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: number;
+
     const show = () => {
       controls.start("visible");
       if (repeatDelay) {
@@ -75,7 +76,7 @@ export const AnimatedText = ({
     }
 
     return () => clearTimeout(timeout);
-  }, [isInView]);
+  }, [controls, isInView, repeatDelay]);
 
   return (
     <Wrapper className={className}>
