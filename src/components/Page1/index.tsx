@@ -16,20 +16,23 @@ function Page1() {
       },
       {
         image: Dog1Pic,
+        text: "Lum1-1",
       },
       {
         image: Dog2Pic,
+        text: "Lum1-2",
       },
       {
         image: Dog3Pic,
         text: "Lum1-3",
       },
       {
-        text: "Lum1-4",
+        image: Dog1Pic,
       },
     ],
     []
   );
+
   const arr2 = useMemo(
     () => [
       {
@@ -37,17 +40,15 @@ function Page1() {
         text: undefined,
       },
       {
-        image: Dog3Pic,
-      },
-      {
-        text: "Lum2-2",
+        image: Dog2Pic,
+        text: "Lum2-1",
       },
       {
         image: Dog1Pic,
-        text: "Lum2-3",
+        text: "Lum2-2",
       },
       {
-        text: "Lum2-4",
+        text: "Lum2-3",
       },
       {
         image: Dog3Pic,
@@ -55,35 +56,57 @@ function Page1() {
     ],
     []
   );
-  const dataState = useMemo(() => [arr1, arr2], [arr1, arr2]);
+
+  const arr3 = useMemo(
+    () => [
+      {
+        image: undefined,
+        text: undefined,
+      },
+      {
+        image: Dog3Pic,
+        text: "Lum3-1",
+      },
+      {
+        image: Dog2Pic,
+        text: "Lum3-2",
+      },
+      {
+        text: "Lum3-3",
+      },
+      {
+        image: Dog1Pic,
+      },
+    ],
+    []
+  );
+
+  const dataState = useMemo(() => [arr1, arr2, arr3], [arr1, arr2, arr3]); //can add [arr1, arr2 , arr3 , arr4 , ....]
 
   const [step, setStep] = useState<number>(0);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [animState, setAnimState] = useState<boolean>(false);
   const [hideButton, setHideButton] = useState<boolean>(false);
-  const [data, setData] = useState<any>([]);
-
   const [showPage2, setShowPage2] = useState<boolean>(false);
+  const [data, setData] = useState<any>([]);
 
   useEffect(() => {
     if (animState) {
+      console.log(
+        `${step}: ${selectedIndex} (${data?.length}, ${dataState.length})`
+      );
       const interval = setInterval(
         () => {
-          if (selectedIndex !== data?.length - 1 || step < dataState.length - 1)
+          if (selectedIndex === data?.length - 1) {
+            setStep((prev) => prev + 1);
+            setHideButton(false);
+            setAnimState(false);
+          } else {
             setSelectedIndex((prev) => prev + 1);
+          }
         },
         selectedIndex === 0 ? 0 : 2000
       );
-
-      if (selectedIndex === data?.length - 1) {
-        setHideButton(false);
-        setAnimState(false);
-        if (step < dataState.length - 1) {
-          setSelectedIndex(0);
-          setData(undefined);
-          setStep((prev) => prev + 1);
-        }
-      }
 
       return () => clearInterval(interval);
     }
@@ -142,11 +165,13 @@ function Page1() {
         <button
           className="w-[300px] fixed bottom-[20px] border-solid border-2 border-black px-[12px] py-[16px] bg-[#FCE33C] rounded-full text-[28px] font-jamjuree font-semibold"
           onClick={() => {
-            if (selectedIndex === 0) {
+            if (step < dataState.length) {
               setData(dataState[step]);
+              setSelectedIndex(0);
             } else {
               setShowPage2(true);
             }
+
             setAnimState(true);
             setHideButton(true);
           }}
