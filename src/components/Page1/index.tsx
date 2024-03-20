@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Dog1Pic from "./../../assets/dog1.jpg";
 import Dog2Pic from "./../../assets/dog2.jpg";
 import Dog3Pic from "./../../assets/dog3.jpg";
+import Firework from "../Page2";
 
 function Page1() {
   const arr1 = useMemo(
@@ -58,6 +59,8 @@ function Page1() {
   const [hideButton, setHideButton] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
 
+  const [showPage2, setShowPage2] = useState<boolean>(false);
+
   useEffect(() => {
     if (animState) {
       const interval = setInterval(
@@ -77,6 +80,10 @@ function Page1() {
     }
   }, [animState, selectedIndex, data, step]);
 
+  if (showPage2) {
+    return <Firework />;
+  }
+
   return (
     <div className="w-full h-full flex flex-col items-center">
       <div className="relative w-full h-full flex flex-col items-center">
@@ -90,7 +97,7 @@ function Page1() {
                   initial={{ opacity: 0, scale: 1 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1 }}
-                  transition={{ duration: 3 }}
+                  transition={{ duration: 2.5, ease: "easeInOut" }}
                 >
                   {item.image && (
                     <img
@@ -117,7 +124,7 @@ function Page1() {
             if (selectedIndex === 0 && step <= dataState.length - 1) {
               setData(dataState[step]);
             } else {
-              console.log("render hapy");
+              setShowPage2(true);
             }
             setAnimState(true);
             setHideButton(true);
